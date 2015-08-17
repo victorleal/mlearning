@@ -13,8 +13,12 @@ J = 0;
 % Instructions: Compute the cost of a particular choice of theta
 %               You should set J to the cost.
 
+% theta is a vector filled with zeros
+M = theta' .* X;
+M = sum(M,2);
+S = (M.-y).^2;
 
-
+J = sum(S) / (2*m);
 
 
 % =========================================================================
