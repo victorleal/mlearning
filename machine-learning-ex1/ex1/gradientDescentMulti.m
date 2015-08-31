@@ -28,11 +28,9 @@ for iter = 1:num_iters
 
     %theta(1) = theta(1) - alpha*(sum(S(:,1),1)/m)
     %theta(2) = theta(2) - alpha*(sum(S(:,2),1)/m)
+    %theta(3) = theta(3) - alpha*(sum(S(:,3),1)/m)
 
-    theta = theta .- (alpha * (sum(S,1)/m))
-
-
-
+    theta = (theta' .- alpha/m * (sum(S,1)))';
 
 
 
