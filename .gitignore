@@ -219,3 +219,5 @@ lib/
 *.mat
 YearPredictionMSD.txt
 octave-workspace
+.RData
+.Rhistory
