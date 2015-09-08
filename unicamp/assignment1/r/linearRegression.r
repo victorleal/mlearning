@@ -1,17 +1,17 @@
-#rm(list=ls())
+rm(list=ls())
 #sink("log.txt")
 time1 <- proc.time()
 
 # Load the data
-#data <- read.csv(file.choose(), header=F)
+data <- read.csv(file.choose(), header=F)
 
 # Get the first 324600 (70%) examples for the 90 variables
-#X <- data[1:324600, c(seq(2,91,by=3))]
+X <- data[1:324600, c(seq(2,91,by=3))]
 
 # Get the first 463715 targets
-#y <- data[1:324600, 1]
+y <- data[1:324600, 1]
 
-#m <- length(y)
+m <- length(y)
 
 # Starts to normalize the features
 mu <- matrix(0, 1, ncol(X))
@@ -27,7 +27,7 @@ X <- X / sigma
 #grid <- seq(0.06, 0.07, 0.002)
 #grid_length <- length(grid)
 
-alpha = 0.066
+alpha = 0.04
 
 # Starts Gradient Descent
 num_iters <- 400
@@ -40,7 +40,7 @@ X_sum <- apply(X, 2, sum)
   #alpha <- grid[i]
   
   for (i in 1:num_iters) {
-    cat(" Current iteration: ", i)
+    cat("\nCurrent iteration: ", i)
     
     theta_transp <- t(theta)
     
