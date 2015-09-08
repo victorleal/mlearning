@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import numpy as numpy
 import pandas as pd
 from ggplot import *
@@ -136,46 +138,93 @@ def gd_method(f, f_valid, v, v_validation):
     print "MEAN ABSOLUTE ERROR (validation) "
     print mean_absolute_error(v_validation, pred_validation)
 
-def normalEquation(f, f_valid, v, v_valid):
-    m = len(v)
 
-    features['ones'] = numpy.ones(m)  # Add a column of 1s (y intercept)
+def normalEquation(features, features_validation, values, values_validation):
 
-    features_array = numpy.array(f)
-    values_array = numpy.array(v)
-
-    M = numpy.dot(features_array.transpose(), features_array)
+    M = numpy.dot(features.T, features)
+    print "Transposta de f por f"
+    print M.shape
+    M = numpy.array(M)
+    print "Transformou em array"
+    print M.shape
     M = numpy.linalg.pinv(M)
-    theta = numpy.dot(numpy.dot(M, features_array.transpose()), values_array)
+    print "Inversa"
+    print M.shape
+    M = numpy.dot(M, features.T)
+    print "Multiplicou por transposta de f"
+    print M.shape
+    theta = numpy.dot(M, values)
+    #M = numpy.linalg.pinv(M)
 
+
+    print theta.shape
+    print features.shape
     print theta
 
-    predictions = numpy.dot(theta, features_array)
-    pred_validation = numpy.dot(theta.transpose(), features_array)
+    predictions = numpy.dot(theta, features.T)
+    pred_validation = numpy.dot(theta, features_validation.T)
+
+    print predictions
 
     print "MEAN ABSOLUTE ERROR "
-    print mean_absolute_error(v, predictions)
+    print mean_absolute_error(values, predictions)
 
     print "MEAN ABSOLUTE ERROR (validation) "
-    print mean_absolute_error(v, pred_validation)
+    print mean_absolute_error(values_validation, pred_validation)
+
 
 if __name__ == '__main__':
     # Read data
-    data = pd.read_csv('C:\\Users\\Victor Leal\\Desktop\\mlearning\\assignment1\\YearPredictionMSD.txt', header=None)
+    #data = pd.read_csv('C:\\Users\\Victor Leal\\Desktop\\mlearning\\assignment1\\YearPredictionMSD.txt', header=None)
+    data = pd.read_csv('/home/victor/YearPredictionMSD.txt', header=None)
 
-    #2001  49.94357   21.47114  73.07750   8.74861  -17.40628  -13.09905
+    '''
+    515345 Linhas no total
+    Training = 463715
+    Testing = 51630
+
+    Dividindo o training para validation
+    70% do conjunto de training = 324600
+    30% para validation = 139115
+    '''
 
     # Used to define the model
-    features = data.ix[range(0, 324600), range(1,91)]
-    values = data.ix[range(0, 324600), 0]
+    #features = data.ix[range(0, 10000), range(1,91,3)]
+    features_a = data.ix[range(0, 1000), range(1,31)]
+    features_b = data.ix[range(0, 1000), range(31,61)]
+    features_c = data.ix[range(0, 1000), range(61,91)]
+
+    values = data.ix[range(0, 1000), 0]
 
     # Used for validate the model
     features_validation = data.ix[range(324600, 463715), range(1,91)]
     values_validation = data.ix[range(324600, 463715), 0]
 
+    m = len(values)
+    m_validation = len(values_validation)
+
+    ones = numpy.ones(m)  # Add a column of 1s (y intercept)
+    ones_validation = numpy.ones(m_validation)  # Add a column of 1s (y intercept)
+
+
+    #features = numpy.append(features, ones)
+    a = numpy.array(features_a).sum(axis=1)
+    b = numpy.array(features_b).sum(axis=1)
+    c = numpy.array(features_c).sum(axis=1)
+
+    features = [ones,a,b,c]
+
+    features_validation['ones'] = numpy.ones(m_validation)  # Add a column of 1s (y intercept)
+    #features_validation = numpy.append(features_validation, ones_validation)
+
+    features_array = numpy.array(features)
+    features_validation_array = numpy.array(features_validation)
+    values_array = numpy.array(values)
+    values_validation_array = numpy.array(values_validation)
+
     #gd_method(features, features_validation, values, values_validation)
 
-    normalEquation(features, features_validation, values, values_validation)
+    normalEquation(features_array, features_validation_array, values_array, values_validation_array)
 
 
 

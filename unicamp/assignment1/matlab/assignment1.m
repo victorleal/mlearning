@@ -8,14 +8,20 @@ clear ; close all; clc
 fprintf('Loading data ...\n');
 
 %% Load Data
-data = load('C:\Users\Victor Leal\Desktop\mlearning\assignment1\YearPredictionMSD.txt');
-X = data(1:324600, 2:91);
-y = data(1:324600, 1);
+%data = load('C:\Users\Victor Leal\Desktop\mlearning\assignment1\YearPredictionMSD.txt');
+data = load('/home/victor/YearPredictionMSD.txt');
+a = data(1:10000, 2:31);
+b = data(1:10000, 32:61);
+c = data(1:10000, 62:91);
+
+X = [sum(a,2) sum(b,2) sum(c,2)];
+%X = data(1:324600, 2:91);
+y = data(1:10000, 1);
 m = length(y);
 
 % Print out some data points
 fprintf('First 10 examples from the dataset: \n');
-fprintf(' x = [%.0f %.0f], y = %.0f \n', [X(1:10,1) y(1:10,1)]');
+fprintf(' x = [%.0f %.0f], y = %.0f \n', [X(1:10,1:3) y(1:10,1)]');
 
 %fprintf('Program paused. Press enter to continue.\n');
 %pause;
@@ -74,6 +80,7 @@ fprintf('Normalizing Features ...\n');
 %fprintf(' %f \n', theta);
 %fprintf('\n');
 
-theta = normalEqn(X,y)
+theta = normalEqn(X,y);
 
-theta
+a_data = ()
+theta * data(324600:334600, 2:91)
