@@ -14,10 +14,12 @@ a = data(1:10000, 2:31);
 b = data(1:10000, 32:61);
 c = data(1:10000, 62:91);
 
-X = [sum(a,2) sum(b,2) sum(c,2)];
-%X = data(1:324600, 2:91);
 y = data(1:10000, 1);
 m = length(y);
+
+X = [ones(m,1), sum(a,2) sum(b,2) sum(c,2)];
+%X = data(1:324600, 2:91);
+
 
 % Print out some data points
 fprintf('First 10 examples from the dataset: \n');
@@ -82,5 +84,7 @@ fprintf('Normalizing Features ...\n');
 
 theta = normalEqn(X,y);
 
-a_data = ()
-theta * data(324600:334600, 2:91)
+a_data = data(1:10000, 2:31);
+b_data = data(1:10000, 32:61);
+c_data = data(1:10000, 62:91);
+[ones(m,1) sum(a_data,2) sum(b_data,2) sum(c_data,2)]*theta
