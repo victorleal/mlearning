@@ -46,12 +46,12 @@ def plot_cost_history(alpha, cost_history):
     from this function.
     """
     cost_df = pd.DataFrame({
-        'Cost_History': cost_history,
-        'Iteration': range(len(cost_history))
+        'Cost_Function': cost_history,
+        'Iterations': range(len(cost_history))
     })
 
-    return ggplot(cost_df, aes('Iteration', 'Cost_History')) + geom_point() + ggtitle(
-        'Cost History for alpha = %.3f' % alpha)
+    return ggplot(cost_df, aes('Iterations', 'Cost_Function')) + geom_point() + ggtitle(
+        'Cost Function - alpha = %.3f' % alpha)
 
 def compute_r_squared(data, predictions):
     # Write a function that, given two input numpy arrays, 'data', and 'predictions,'
@@ -175,8 +175,8 @@ def normalEquation(features, features_validation, values, values_validation):
 
 if __name__ == '__main__':
     # Read data
-    #data = pd.read_csv('C:\\Users\\Victor Leal\\Desktop\\mlearning\\assignment1\\YearPredictionMSD.txt', header=None)
-    data = pd.read_csv('/home/victor/YearPredictionMSD.txt', header=None)
+    data = pd.read_csv('C:\\Users\\Victor Leal\\Desktop\\mlearning\\assignment1\\YearPredictionMSD.txt', header=None)
+    #data = pd.read_csv('/home/victor/YearPredictionMSD.txt', header=None)
 
     '''
     515345 Linhas no total
@@ -189,7 +189,11 @@ if __name__ == '__main__':
     '''
 
     # Used to define the model
-    #features = data.ix[range(0, 10000), range(1,91,3)]
+    features = data.ix[range(0, 324600), range(1,91,3)]
+    values = data.ix[range(0, 324600), 0]
+    features_validation = data.ix[range(324600, 463715), range(1,91,3)]
+    values_validation = data.ix[range(324600, 463715), 0]
+    '''
     features_a = data.ix[range(0, 1000), range(1,31)]
     features_b = data.ix[range(0, 1000), range(31,61)]
     features_c = data.ix[range(0, 1000), range(61,91)]
@@ -221,10 +225,10 @@ if __name__ == '__main__':
     features_validation_array = numpy.array(features_validation)
     values_array = numpy.array(values)
     values_validation_array = numpy.array(values_validation)
+    '''
+    gd_method(features, features_validation, values, values_validation)
 
-    #gd_method(features, features_validation, values, values_validation)
-
-    normalEquation(features_array, features_validation_array, values_array, values_validation_array)
+    #normalEquation(features_array, features_validation_array, values_array, values_validation_array)
 
 
 

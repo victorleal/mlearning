@@ -1,17 +1,20 @@
-rm(list=ls())
+#rm(list=ls())
 #sink("log.txt")
 time1 <- proc.time()
 
 # Load the data
-data <- read.csv(file.choose(), header=F)
+data <- read.csv("/home/victor/YearPredictionMSD.txt", header=F)
 
 # Get the first 324600 (70%) examples for the 90 variables
 X <- data[1:324600, c(seq(2,91,by=3))]
+X_validation <- data[324601:463715, c(seq(2,91,by=3))]
 
 # Get the first 463715 targets
 y <- data[1:324600, 1]
+y_validation <- data[324601:463715, 1]
 
 m <- length(y)
+m_validation <- length(y_validation)
 
 # Starts to normalize the features
 mu <- matrix(0, 1, ncol(X))
@@ -22,6 +25,12 @@ sigma <- sigma + apply(X, 2, sd)
 
 X <- X - mu
 X <- X / sigma
+
+mu <- apply(X_validation, 2, mean)
+sigma <- apply(X_validation, 2, sd)
+
+X_validation <- X_validation - mu
+X_validation <- X_validation - sigma
 
 # Grid
 #grid <- seq(0.06, 0.07, 0.002)
@@ -65,6 +74,14 @@ X_sum <- apply(X, 2, sum)
   dev.off()
 #}
 
+predictions <- theta * X_validation
+predictions
+
+result <- y_validation - predictions
+result
+
+result <- abs(result)
+mean(result)
 
 time2 <- proc.time()
 

@@ -8,8 +8,8 @@ clear ; close all; clc
 fprintf('Loading data ...\n');
 
 %% Load Data
-%data = load('C:\Users\Victor Leal\Desktop\mlearning\assignment1\YearPredictionMSD.txt');
-data = load('/home/victor/YearPredictionMSD.txt');
+data = load('C:\Users\Victor Leal\Desktop\mlearning\assignment1\YearPredictionMSD.txt');
+%data = load('/home/victor/YearPredictionMSD.txt');
 a = data(1:10000, 2:31);
 b = data(1:10000, 32:61);
 c = data(1:10000, 62:91);
