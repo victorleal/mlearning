@@ -9,6 +9,7 @@ import statsmodels.api as sm
 #from ggplot import *
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn import metrics
 
 
@@ -35,23 +36,33 @@ if __name__ == '__main__':
     df = df.join(dummy_ranks.ix[:, :])
 
     # Just 10 thousand training examples
-    df = df.ix[range(0, 10000), :]
+    df = df.ix[range(0, 100000), :]
     df['Interceptor'] = 1.0
 
     train_cols = df.columns[1:]
     print train_cols
 
-    model = LogisticRegression()
+    model = KNeighborsClassifier()
     model.fit(df[train_cols], df['Category'])
     print(model)
 
     # make predictions
     expected = numpy.array(df['Category']).astype(str)
     predicted = model.predict(df[train_cols])
-    print expected
+
+    target = open('expected.txt', 'w')
+    for item in expected:
+        target.write("%s\n" % item)
+
+
+    target = open('predicted.txt', 'w')
+    for item in predicted:
+        target.write("%s\n" % item)
+
+
     # summarize the fit of the model
     print(metrics.classification_report(expected, predicted))
-    #print(metrics.confusion_matrix(expected, predicted))
+    print(metrics.confusion_matrix(expected, predicted))
 
     #logit = sm.MNLogit(df['Category'], df[train_cols])
     #print logit
