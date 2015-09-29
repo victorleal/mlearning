@@ -25,16 +25,17 @@ head(data)
 
 categories = levels(df$Category)
 
-for(i in 1:length(categories)){
+for(i in 1:length(categories)) {
+  cat("\n\n")
   time1 <- proc.time()
   print(categories[i])
   data$Category.W <- 0
   data$Category.W[data$Category==categories[i]] <- 1 
   
   mylogit <- glm(Category.W ~ minute+PdDistrict.f+X+Y, data=data, family = "binomial")
-  summary(mylogit)
+  print(summary(mylogit))
   time2 <- proc.time()
   
-  time2 - time1
+  print(time2 - time1)
 }
 
