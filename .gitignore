@@ -222,3 +222,5 @@ octave-workspace
 .RData
 .Rhistory
 .idea/
+bic_results/
+ppm/

@@ -8,18 +8,19 @@ clear ; close all; clc
 fprintf('Loading data ...\n');
 
 %% Load Data
-data = load('C:\Users\Victor Leal\Desktop\mlearning\assignment1\YearPredictionMSD.txt');
-%data = load('/home/victor/YearPredictionMSD.txt');
-a = data(1:10000, 2:31);
-b = data(1:10000, 32:61);
-c = data(1:10000, 62:91);
+%data = load('C:\Users\Victor Leal\Desktop\mlearning\assignment1\YearPredictionMSD.txt');
+data = load('/home/victor/YearPredictionMSD.txt');
+training_examples = 324600;
 
-y = data(1:10000, 1);
+a = data(1:training_examples, 2:13);
+b = data(1:training_examples, 2:2:91);
+c = data(1:training_examples, 3:2:91);
+
+y = data(1:training_examples, 1);
 m = length(y);
 
-X = [ones(m,1), sum(a,2) sum(b,2) sum(c,2)];
-%X = data(1:324600, 2:91);
-
+X = data(1:training_examples, 2:13);
+X = [mean(a,2), X];
 
 % Print out some data points
 fprintf('First 10 examples from the dataset: \n');
@@ -31,10 +32,10 @@ fprintf(' x = [%.0f %.0f], y = %.0f \n', [X(1:10,1:3) y(1:10,1)]');
 % Scale features and set them to zero mean
 fprintf('Normalizing Features ...\n');
 
-%[X mu sigma] = featureNormalize(X);
+[X mu sigma] = featureNormalize(X);
 
 % Add intercept term to X
-%X = [ones(m, 1) X];
+X = [ones(m, 1) X];
 
 
 %% ================ Part 2: Gradient Descent ================
@@ -64,27 +65,47 @@ fprintf('Normalizing Features ...\n');
 %fprintf('Running gradient descent ...\n');
 
 % Choose some alpha value
-%alpha = 0.1;
-%num_iters = 3000;
+alpha = 0.04;
+num_iters = 1000;
 
 % Init Theta and Run Gradient Descent
-%theta = zeros(90, 1);
-%[theta, J_history] = gradientDescentMulti(X, y, theta, alpha, num_iters);
+theta = zeros(14, 1);
+[theta, J_history] = gradientDescentMulti(X, y, theta, alpha, num_iters);
 
 % Plot the convergence graph
-%figure;
-%plot(1:numel(J_history), J_history, '-b', 'LineWidth', 2);
-%xlabel('Number of iterations');
-%ylabel('Cost J');
+figure;
+plot(1:numel(J_history), J_history, '-b', 'LineWidth', 2);
+xlabel('Number of iterations');
+ylabel('Cost J');
 
 % Display gradient descent's result
 %fprintf('Theta computed from gradient descent: \n');
 %fprintf(' %f \n', theta);
-%fprintf('\n');
+fprintf('\n');
 
-theta = normalEqn(X,y);
+%theta = normalEqn(X,y);
 
-a_data = data(1:10000, 2:31);
-b_data = data(1:10000, 32:61);
-c_data = data(1:10000, 62:91);
-[ones(m,1) sum(a_data,2) sum(b_data,2) sum(c_data,2)]*theta
+%{
+a_data = data(1:10000, 2:3:91);
+b_data = data(1:10000, 3:3:91);
+c_data = data(1:10000, 4:3:91);
+%}
+
+% VALIDATION
+valid_a = data(324600:463715, 2:13);
+valid_b = data(324600:463715, 2:2:91);
+valid_c = data(324600:463715, 3:2:91);
+
+y_validation = data(324600:463715, 1);
+m = length(y_validation);
+
+X_validation = data(324600:463715, 2:13);
+X_validation = [mean(valid_a,2) X_validation];
+X_validation = X_validation .- mu;
+X_validation = X_validation ./ sigma;
+
+X_validation = [ones(m,1) X_validation];
+
+predictions = X_validation * theta;
+
+MAE = mean(abs(predictions-y_validation))
