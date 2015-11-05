@@ -1,0 +1,177 @@
+
+R version 3.2.2 (2015-08-14) -- "Fire Safety"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R é um software livre e vem sem GARANTIA ALGUMA.
+Você pode redistribuí-lo sob certas circunstâncias.
+Digite 'license()' ou 'licence()' para detalhes de distribuição.
+
+R é um projeto colaborativo com muitos contribuidores.
+Digite 'contributors()' para obter mais informações e
+'citation()' para saber como citar o R ou pacotes do R em publicações.
+
+Digite 'demo()' para demonstrações, 'help()' para o sistema on-line de ajuda,
+ou 'help.start()' para abrir o sistema de ajuda em HTML no seu navegador.
+Digite 'q()' para sair do R.
+
+> directory <- "/home/victor/desktop/mlearning/unicamp/assignment4/"
+> 
+> number_of_features <- 150
+> 
+> df <- read.csv(paste(directory, "dataset_range_10.txt", sep=""), header=F)
+> features <- sample(4:ncol(df), number_of_features)
+> 
+> #df <- data.frame(df[1:3], apply(df[features], 2, fft))
+> #features <- colnames(df)
+> #features <- features[4:length(features)]
+> 
+> #df <- data.frame(df[1:3], apply(df[features], 2, as.numeric))
+> 
+> # data <- read.csv(paste(directory, "dataset_ok.txt", sep=""), header=F)
+> # 292218 e 146109 para range=10
+> 
+> training <- df[sample(1:nrow(df), floor(nrow(df)/2)),]
+> testing <- df[sample(1:nrow(df), floor(nrow(df)/2)),]
+> 
+> classes <- levels(df$V2)
+> rm(df)
+> 
+> models <- list()
+> i <- 1
+> form <- paste("Activity ~ ", paste(paste0("V", features), collapse= "+"))
+> 
+> # Training the models
+> for (class in classes) {
++     #cat("\n\n")
++     #print(class)
++ 
++     model <- 0
++ 
++     training$Activity <- 0
++     training$Activity[training$V2 == class] <- 1
++ 
++     model <- glm(form, data=training, family=binomial())
++     testing[paste("predict_", i)] <- predict(model, testing, type="response")
++     i <- i+1
++ }
+> 
+> # Running the tests
+> testing$class <- apply(testing[, c(grep("predict_", colnames(testing)))], 1, which.max)
+> testing$classname <- classes[testing$class]
+> 
+> for (class in classes) {
++   cat("\n\n\n")
++   print(class)
++   subset <- testing[testing$V2 == class, ]
++   print(paste("total rows: ", nrow(subset)))
++   
++   for (class2 in classes) {
++     cat("\n")
++     print(paste(class2, ":", nrow(subset[subset$classname == class2, ])))
++   }
++ }
+
+
+
+[1] "Jogging"
+[1] "total rows:  21416"
+
+[1] "Jogging : 62"
+
+[1] "LyingDown : 0"
+
+[1] "Sitting : 3133"
+
+[1] "Stairs : 0"
+
+[1] "Standing : 0"
+
+[1] "Walking : 18221"
+
+
+
+[1] "LyingDown"
+[1] "total rows:  13483"
+
+[1] "Jogging : 0"
+
+[1] "LyingDown : 0"
+
+[1] "Sitting : 1369"
+
+[1] "Stairs : 0"
+
+[1] "Standing : 0"
+
+[1] "Walking : 12114"
+
+
+
+[1] "Sitting"
+[1] "total rows:  32594"
+
+[1] "Jogging : 0"
+
+[1] "LyingDown : 0"
+
+[1] "Sitting : 9384"
+
+[1] "Stairs : 0"
+
+[1] "Standing : 0"
+
+[1] "Walking : 23210"
+
+
+
+[1] "Stairs"
+[1] "total rows:  2786"
+
+[1] "Jogging : 0"
+
+[1] "LyingDown : 0"
+
+[1] "Sitting : 687"
+
+[1] "Stairs : 0"
+
+[1] "Standing : 0"
+
+[1] "Walking : 2099"
+
+
+
+[1] "Standing"
+[1] "total rows:  14083"
+
+[1] "Jogging : 0"
+
+[1] "LyingDown : 0"
+
+[1] "Sitting : 2838"
+
+[1] "Stairs : 0"
+
+[1] "Standing : 0"
+
+[1] "Walking : 11245"
+
+
+
+[1] "Walking"
+[1] "total rows:  61747"
+
+[1] "Jogging : 23"
+
+[1] "LyingDown : 0"
+
+[1] "Sitting : 13001"
+
+[1] "Stairs : 0"
+
+[1] "Standing : 0"
+
+[1] "Walking : 48723"
+> 
+> 
